@@ -1,0 +1,29 @@
+package database
+
+import (
+	"database/sql"
+	"fmt"
+	"log"
+
+	"INNOSCRIPTA/src/util"
+
+	_ "github.com/lib/pq"
+)
+
+var PostgresDB *sql.DB
+
+func InitPostgres() {
+	connStr := util.GetEnv("POSTGRES_URL", "user=youruser dbname=yourdb sslmode=disable password=yourpassword")
+	var err error
+	PostgresDB, err = sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatalf("Error connecting to PostgreSQL: %v", err)
+	}
+
+	err = PostgresDB.Ping()
+	if err != nil {
+		log.Fatalf("Error pinging PostgreSQL: %v", err)
+	}
+
+	fmt.Println("Successfully connected to PostgreSQL!")
+}
